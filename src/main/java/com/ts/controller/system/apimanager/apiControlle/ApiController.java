@@ -62,7 +62,7 @@ public class ApiController extends BaseController{
 			String url = pd.getString("url"); 
 			String charset = pd.getString("charset");
 			String type = pd.getString("type");
-			String res = "";
+			String res = "`";    
 			String val = "";
 			Map<String, String> retMap = null;
 			if("Post".equals(type)){

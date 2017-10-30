@@ -66,7 +66,7 @@ public class PicturesController extends BaseController {
 		if(null != KEYW && !"".equals(KEYW)){
 			pd.put("KEYW", KEYW.trim());
 		}
-		page.setPd(pd);
+		page.setPd(pd);    
 		List<PageData>	varList = picturesService.list(page);	//列出Pictures列表
 		mv.setViewName("information/pictures/pictures_list");
 		mv.addObject("varList", varList);
