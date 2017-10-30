@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PayRuleMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		SYS_PARAM_CHECK
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="Field">
+		ID,
+		CHECK_TYPE,
+		CHECK_NAME,
+		CHECK_VALUE
+
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{ID},
+		#{CHECK_TYPE},
+		#{CHECK_NAME},	
+		#{CHECK_VALUE}
+	</sql>
+	
+	<!-- 新增会员 -->
+	<insert id="savePay" parameterType="pd">
+		insert into <include refid="tableName"></include> (
+			ID,
+			CHECK_TYPE,
+			CHECK_NAME,
+			CHECK_VALUE	
+		) values (
+			#{ID},
+			#{CHECK_TYPE},
+			#{CHECK_NAME},	
+			#{CHECK_VALUE}
+		)
+	</insert>
+	
+	<!-- 接口业务列表(app用户组) -->
+	<select id="payrulelistPage" parameterType="page" resultType="pd">
+		select 
+			<include refid="Field"></include>
+		from <include refid="tableName"></include> 
+		where 1=1 
+		<if test="pd.keywords != null and pd.keywords != ''"><!-- 用户名检索 -->
+			and(
+					CHECK_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				or
+					CHECK_TYPE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				or
+					CHECK_VALUE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				)
+		</if>
+		
+	</select>
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			ID = #{ID}
+	</select>
+	
+	<!-- 删除用户 -->
+	<delete id="deletePay" parameterType="pd">
+		delete from <include refid="tableName"></include> 
+		where 
+			ID = #{ID}
+	</delete>
+
+	<!-- 修改 -->
+	<update id="editI" parameterType="pd">
+		update  <include refid="tableName"></include>
+			set CHECK_TYPE				= #{CHECK_TYPE},
+				CHECK_NAME 					= #{CHECK_NAME},
+				CHECK_VALUE					= #{CHECK_VALUE}
+			where 
+				ID = #{ID}
+	</update>
+
+	<!-- 全部会员 -->
+	<select id="listAllInterface" parameterType="pd" resultType="pd">
+		select 
+			<include refid="Field"></include>
+		from <include refid="tableName"></include> 
+		where 1=1 
+		<if test="keywords != null and keywords != ''"><!-- 用户名检索 -->
+			and(
+				NAME LIKE CONCAT(CONCAT('%', #{keywords}),'%')
+				)
+		</if>
+		order by CODE
+	</select>
+
+	<!-- 批量删除用户 sys_data_check_relation-->
+	<delete id="deleteAllCheck" parameterType="String">
+		delete from 
+			SYS_DATA_CHECK_RELATION
+		where 
+			ID in
+  			 <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                  #{item}
+             </foreach>
+	</delete>
+	
+	<!-- 批量删除关联数据 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from <include refid="tableName"></include>
+		where 
+			ID in
+  			 <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                  #{item}
+             </foreach>
+	</delete>
+	
+	<!-- 获取总数 -->
+	<select id="getInterfaceCount" parameterType="String" resultType="pd">
+		select 
+			count(ID) interfaceCount
+		from 
+		<include refid="tableName"></include>
+	</select>
+		<!-- 通过ID验证数据是否别使用 -->
+	<select id="chekAllId" parameterType="String" resultType="Integer">
+		select 
+			count(CHECK_ID)
+		from 
+			SYS_DATA_CHECK_RELATION
+		where 
+			CHECK_ID in 
+ 		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">  
+ 			 #{item}  
+ 		</foreach> 
+	</select>
+		<!-- 通过IN_ID获取数据 -->
+	<select id="findByCheckId" parameterType="pd" resultType="pd">
+		select 
+			ID
+		from 
+			SYS_DATA_CHECK_RELATION
+		where 
+			CHECK_ID = #{ID}
+	</select>
+	<select id="findByAllCheckId" parameterType="String" resultType="pd">
+		select 
+			ID
+		from 
+		SYS_DATA_CHECK_RELATION
+		where 
+			CHECK_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">  
+ 			 #{item}  
+ 		</foreach> 
+	</select>
+	<!-- 获取所有参数及参数对应规则 -->
+	<select id="getDataRuleAll" parameterType="String" resultType="pd">
+		select 
+			d.COLUMN_NAME,dc.CHECK_ID 
+		from 
+			sys_data_check_relation dc 
+			LEFT JOIN sys_data_right d on dc.DR_ID = d.DR_ID 
+	</select>
+	
+	<!-- 根据参数DR_ID查询参数对应规则 -->
+	<select id="getRuleBYDrId" parameterType="String" resultType="pd">
+		select c.ID
+			from sys_data_check_relation dc
+			join sys_param_check c on dc.CHECK_ID = c.ID
+			where dc.DR_ID = #{drId}
+	</select>
+	<select id="findRelationByDrCheckId" parameterType="pd" resultType="pd">
+		select dc.ID
+			from sys_data_check_relation dc
+			where dc.DR_ID = #{DR_ID}
+			and dc.CHECK_ID = #{CHECK_ID}
+	</select>
+	<!-- 删除用户 -->
+	<delete id="deleteRelation" parameterType="pd">
+		delete from sys_data_check_relation
+		where 
+			ID = #{ID}
+	</delete>
+	<!-- 删除字段时删除对应关系 -->
+	<delete id="deleteRelationByDRID" parameterType="pd">
+		delete from sys_data_check_relation
+		where 
+			DR_ID = #{ID}
+	</delete>
+	<!-- 批量删除字段时删除对应关系 -->
+	<delete id="deleteAllByDRID" parameterType="String">
+		delete from sys_data_check_relation
+		where 
+			ID in
+  			 <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                  #{item}
+             </foreach>
+	</delete>
+	<!-- 删除用户 -->
+	<insert id="saveRelation" parameterType="pd">
+		insert into sys_data_check_relation (
+			ID,
+			CHECK_ID,
+			DR_ID
+		) values (
+			#{ID},
+			#{CHECK_ID},
+			#{DR_ID}	
+		)
+	</insert>
+	
+</mapper>
