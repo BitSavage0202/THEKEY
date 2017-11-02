@@ -33,7 +33,7 @@ public class IntAppuserController extends BaseController {
 	@Resource(name="appuserService")
 	private AppuserManager appuserService;
 	
-	/**根据用户名获取会员信息
+	/**根据用户名获取会员信息     
 	 * @return
 	 */
 	@RequestMapping(value="/getAppuserByUm")

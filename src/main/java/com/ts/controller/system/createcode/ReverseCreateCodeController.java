@@ -30,7 +30,7 @@ public class ReverseCreateCodeController extends BaseController {
 	
 	String menuUrl = "recreateCode/list.do"; //菜单地址(权限用)
 	
-	/**列表
+	/**列表    
 	 * @return
 	 */
 	@RequestMapping(value="/list")

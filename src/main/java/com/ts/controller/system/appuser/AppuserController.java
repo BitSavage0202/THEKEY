@@ -51,7 +51,7 @@ public class AppuserController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		try{
-			pd = this.getPageData();
+			pd = this.getPageData();   
 			String keywords = pd.getString("keywords");							//检索条件 关键词
 			if(null != keywords && !"".equals(keywords)){
 				pd.put("keywords", keywords.trim());
