@@ -96,8 +96,8 @@ public class TimingBackUpController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		this.removeJob(timingbackupService.findById(pd).getString("JOBNAME"));	//删除任务(修改时可能会修改要备份的表，所以任务名称会改变，所以执行删除任务再新增任务来完成修改任务的效果)
-		String JOBNAME = pd.getString("TABLENAME")+"_"+Tools.getRandomNum();	//任务名称
+		this.removeJob(timingbackupService.findById(pd).getString("JOBNAME"));	  //删除任务(修改时可能会修改要备份的表，所以任务名称会改变，所以执行删除任务再新增任务来完成修改任务的效果)
+		String JOBNAME = pd.getString("TABLENAME")+"_"+Tools.getRandomNum();	  //任务名称
 		String FHTIME = pd.getString("FHTIME");									//时间规则
 		String TABLENAME = pd.getString("TABLENAME");							//表名or整库(all)
 		String TIMINGBACKUP_ID = pd.getString("TIMINGBACKUP_ID");				//任务数据库记录的ID
