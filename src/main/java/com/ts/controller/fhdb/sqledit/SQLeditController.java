@@ -83,9 +83,9 @@ public class SQLeditController extends BaseController {
 			logger.error("执行SQL报错", e);
 		}
 		pdList.add(pd);
-		map.put("columnList", columnList);	//存放字段名
-		map.put("dataList", dataList);		//存放数据(从数据库读出来的一条条的数据)
-		map.put("list", pdList);			//消息类型
+		map.put("columnList", columnList);	   //存放字段名
+		map.put("dataList", dataList);		    //存放数据(从数据库读出来的一条条的数据)
+		map.put("list", pdList);		  	//消息类型
 		return AppUtil.returnObject(pd, map);
 	}
 	
