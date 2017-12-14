@@ -22,7 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ts.controller.base.BaseController;
 import com.ts.entity.Page;
 import com.ts.service.information.attachedmx.AttachedMxManager;
-import com.ts.util.Jurisdiction;
+import com.ts.util.Jurisdiction;    
 import com.ts.util.ObjectExcelView;
 import com.ts.util.PageData;
 import com.ts.util.app.AppUtil;
